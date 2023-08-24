@@ -30,7 +30,7 @@ const typeDefs = gql`
     type Query {
         users: [User!]!
         user(id: ID!): User!
-        movies: [Movie!]!
+        movies: MoviesResult
         movie(name: String!): Movie!
     }
 
@@ -51,6 +51,16 @@ const typeDefs = gql`
         updateUserName(input: UpdateUsernameInput!) : User
         deleteUser(id: ID!): User
     }
+    
+    type MoviesSuccessfulResult {
+        movies: [Movie!]!
+    }
+
+    type MoviesFailureResult {
+        message: String!
+    }
+    
+    union MoviesResult = MoviesSuccessfulResult | MoviesFailureResult
 
 `;
 

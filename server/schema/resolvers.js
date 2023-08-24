@@ -4,17 +4,23 @@ const resolvers = {
     Query: {
 
         //User Resolvers...
-        users: () => {
-            return UserList;
+        users: (parent, args, context, info) => {
+           return UserList
         },
-        user: (_, args) => {
+        user: (parent, args, context, info) => {
             const id = Number(args.id);
             return UserList.find(user => user.id === id);
         },
 
         //Movie Resolvers
         movies: () => {
-            return MovieList;
+            if(MovieList) {
+                return {movies: MovieList};
+            }else{
+                return {
+                    message: "Yo, there was an error !"
+                }
+            }
         },
         movie: (_, args) => {
             const name = args.name;
@@ -55,6 +61,17 @@ const resolvers = {
                 UserList.splice(userIndex, 1);
             }
             return null;
+        }
+    },
+    MoviesResult: {
+        __resolveType(obj) {
+            if (obj.movies) {
+                return "MoviesSuccessfulResult";
+            } else if (obj.message) {
+                return "MoviesFailureResult"
+            } else {
+                return null;
+            }
         }
     }
 }
